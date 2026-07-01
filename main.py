@@ -1,20 +1,23 @@
-from ray import Ray
-import matplotlib.pyplot as plt
+from src.ray import Ray
+from src.surface import PlaneSurface
 import numpy as np
+import matplotlib.pyplot as plt
 
-ray = Ray(position=[0,2], direction=[1,0])
+ray = Ray([0, 2], [1, -0.5])
+surface = PlaneSurface(z=0)
 
-for i in range(10):
-    ray.propagate(1)
+hit = surface.intersect(ray)
 
-history = np.array(ray.history)
+ray.propagate(5)
 
-plt.figure(figsize=(8,4))
-plt.plot(history[:,0], history[:,1], linewidth=2)
-plt.scatter(history[:,0], history[:,1])
-plt.grid(True)
+h = np.array(ray.history)
+
+plt.plot(h[:,0], h[:,1])
+
+if hit is not None:
+    plt.scatter(hit[0], hit[1], color='red', s=80)
+
+plt.axhline(0)
 plt.axis("equal")
-plt.xlabel("x (mm)")
-plt.ylabel("y (mm)")
-plt.title("Single Ray Propagation")
+plt.grid()
 plt.show()
