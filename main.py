@@ -5,18 +5,18 @@ import numpy as np
 
 ray = Ray([0,2],[1,-0.5])
 
-mirror = MirrorSurface(z=0)
+mirror = MirrorSurface(y=0)
 
-result = mirror.reflect(ray)
+result = mirror.reflected(ray)
 
 if result is not None:
+    hit , new_dir = result
 
-    hit, new_dir = result
-
-    ray.propagate(np.linalg.norm(hit-ray.position))
+    ray.propogate(np.linalg.norm(hit-ray.position))
 
     reflected_ray = Ray(hit, new_dir)
     reflected_ray.propagate(5)
+    ## yeni ray mesafe olarak 5 birim gitsin
 
     h1 = np.array(ray.history)
     h2 = np.array(reflected_ray.history)
