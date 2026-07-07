@@ -1,40 +1,45 @@
 import numpy as np
 
-class PlaneSurface:
-    def __init__(self, z=0):
-        self.z = z
+## düzlem yüzeyi oluşturduk. Bu sonsuz uzunlukta düz bir yüzeyi temsil ediyor.
+class Planesurface:
+    def __init__(self,y=0): 
+        ##dışarıdan bir y değeri al. hiçbir y değeri gelmezse y yi sıfır kabul et
+        
+        self.y = y
+        ## y'yi fonksiyon içinde kullanabilmeyi sağlar.
 
-    def intersect(self, ray):
-        origin_z = ray.position[1]
-        direction_z = ray.direction[1]
+    def intersect(self,ray):
+        ##kesişim noktasını bulmayı sağlar.
 
-        if direction_z == 0:
+        origin_y = ray.position[1]
+        direction_y = ray.direction[1]
+        ## direction[0] x değeri direction[1] y değeri dir.
+
+        if direction_y == 0:
             return None
 
-        t = (self.z - origin_z) / direction_z
+        t = (self.y - origin_y)/direction_y
+        ## y(t)=y0​+tdy​ burada t'yi yanlız bırak ve t'yi bul.
 
-        if t < 0:
-            return None
+        hit_point = ray.position + t* ray.direction
+        ## kesişim yerini bulur.
 
-        hit_point = ray.position + t * ray.direction
         return hit_point
-
-
-class MirrorSurface(PlaneSurface):
-
-    def reflect(self, ray):
-
+class MirrorSurface(Planesurface):
+    def reflect(self,ray):
         hit = self.intersect(ray)
 
         if hit is None:
             return None
-
-        # Aynanın normali (yukarı bakıyor)
-        normal = np.array([0.0, 1.0])
+    
+        normal = np.array([0.0 , 1.0])
+        ## Aynanın normali
 
         direction = ray.direction
-        direction = direction / np.linalg.norm(direction)
-
-        reflected = direction - 2 * np.dot(direction, normal) * normal
+        direction = direction/ np.linalg.norm(direction)
+        
+        reflected = direction - 2*np.dot(direction,normal) * normal
+        ## np.dot dot producct yapar yani D.N direction ve normali çarpar. Çıkan sonuç normal vektörüyle çarpılır. R = D-2(D.N)N
 
         return hit, reflected
+    
